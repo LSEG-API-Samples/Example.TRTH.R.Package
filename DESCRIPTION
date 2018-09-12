@@ -1,0 +1,16 @@
+Package: RTRTH
+Type: Package
+Title: A client for Thomson Reuters Tick History REST API
+Version: 0.2.0
+Author: Warat Boonyanit
+Maintainer: Warat Boonyanit <Warat.boonyanit@thomsonreuters.com>
+Description: This R package use the httr to retrieve data from Thomson Reuters Tick History REST APIs.
+    It is part of an educational articles TRTH in R (https://developers.thomsonreuters.com/articles-samples)
+License: TODO
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 6.0.1
+Imports:
+  jsonlite,
+  httr,
+  readr
