@@ -9,7 +9,7 @@ ebwj <- function(resp,
                  aws = FALSE,
                  silence = FALSE) {
   i = 0
-  if(!silence) { pb <- txtProgressBar(max = attempt, char = ".",style = 2) }
+  if(!silence) { pb <- txtProgressBar(max = attempt, width = attempt, char = ".",style = 2) }
   while(!async_check(resp,silence) && i < attempt)
   {
     if(!silence) { setTxtProgressBar(pb, i) }

@@ -11,9 +11,6 @@
 #' @family helper
 async_check <- function(resp, silence = FALSE) {
   if (httr::status_code(resp) == 202) {
-    # if(!silence){
-    #   message("The request has been accepted but has not yet completed executing asynchronously.")
-    # }
     assign("location",resp$headers$location,envir = cacheEnv)
     return(FALSE)
   } else if(httr::status_code(resp) == 200) {
