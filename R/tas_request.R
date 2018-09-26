@@ -22,6 +22,7 @@ tas_request <- function(identifier,
   stopifnot(is.numeric(attempt), length(attempt) == 1L)
   stopifnot(is.numeric(pause_base), length(pause_base) == 1L)
   stopifnot(is.numeric(pause_cap), length(pause_cap) == 1L)
+  stopifnot(is.numeric(pause_min), length(pause_min) == 1L)
 
   # Build URL
   url <- sprintf("%s/Extractions/ExtractRaw", getOption("dss_url"))
