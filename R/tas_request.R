@@ -1,3 +1,23 @@
+#' Time & Sales On-Demand request
+#'
+#' \code{\link{tas_request}} send a single on-demand request with the specified
+#' instruments, fields, and condition.
+#'
+#' Time and sales is a display of market trading information, showing a view of
+#' every detail of a market's price movement.
+#'
+#' The function use Exponential Backoff with Jitter in order to find
+#' an acceptable polling rate. The approach is outlined in
+#' \url{https://aws.amazon.com/blogs/architecture/exponential-backoff-and-jitter}.
+#'
+#' @param identifier A list of instrument created from \code{\link{identifier}} function.
+#' @param fields A Time and Sales content fields.
+#'   Use \code{\link{get_tas_fields}} to request a list of all available Time and Sales fields.
+#' @param condition A Time and Sales condition created from \code{\link{tas_condition}} function.
+#' @inheritParams on_demand
+#' @inherit on_demand return
+#'
+#'
 tas_request <- function(identifier,
                         fields = c("Trade - Price",
                                    "Trade - Volume",
@@ -37,20 +57,16 @@ tas_request <- function(identifier,
     )
   )
   b <- jsonlite::toJSON(b,POSIXt = "ISO8601",auto_unbox = TRUE)
-
-  # Make the request
-  token <- get("token",envir = cacheEnv)
-  resp <- httr::POST(url,
-                     httr::add_headers(prefer = "respond-async,wait=10",
-                                       Authorization = token),
-                     httr::content_type_json(),
-                     body = b,
-                     encode = "raw")
-
-  # Initial error check
-  error_check(resp,"Time&Sale extraction failed")
-  # Exponential Backoff with Jitter
-  ebwj(resp,attempt,pause_base,pause_cap,pause_min,path,overwrite,aws,silence)
+  on_demand(url,
+            b,
+            attempt,
+            pause_base,
+            pause_cap,
+            pause_min,
+            path,
+            overwrite,
+            aws,
+            silence)
 }
 
 tas_condition <- function(range_type = c("Range",

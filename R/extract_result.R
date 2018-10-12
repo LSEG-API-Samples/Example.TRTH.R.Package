@@ -1,4 +1,20 @@
-#' The file is saved to \code{\link[base]{tempfile}} if the \path{path} was not given.
+#' Extract the raw extraction result
+#'
+#' This method send GET request to \emph{RawExtractionResults} end point in order
+#' to download the csv file.
+#'
+#' The file will be saved to \code{\link[base]{tempfile}} if the \path{path} was
+#' not given.
+#'
+#' @param path Path to save the extracted csv file to. If ommited, it will save
+#'   the file to \code{\link[base]{tempfile}}.
+#' @param overwrite Will only overwrite existing path if \code{TRUE}.
+#' @param jobid The extraction job id.
+#' @param aws Will retrieving files directly from the Amazon Web Services cloud
+#'   if TRUE.
+#' @param silence Will not print out extraction note if \code{TRUE}.
+#' @return Path that the csv file was saved.
+#'
 extract_result <- function(path = NULL,
                            overwrite = FALSE,
                            jobid = NULL,

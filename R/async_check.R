@@ -4,6 +4,7 @@
 #' If \emph{202 (accepted)}, then return \code{FALSE}.
 #'
 #' @param resp The \code{\link[httr]{response}} object.
+#' @param silence Will not print out extraction note if \code{TRUE}.
 #'
 #' @return \code{FALSE} if resp is \emph{202 (accepted)}
 #' or \code{TRUE} if resp is \emph{200 (Okay)}.

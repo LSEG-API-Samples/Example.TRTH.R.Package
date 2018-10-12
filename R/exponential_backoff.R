@@ -1,4 +1,7 @@
-# Exponential Backoff with Jitter
+#' Exponential Backoff with Jitter
+#'
+#' @inheritParams on_demand
+
 ebwj <- function(resp,
                  attempt = 15,
                  pause_base = 10,
