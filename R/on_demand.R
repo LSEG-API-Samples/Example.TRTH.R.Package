@@ -22,21 +22,19 @@
 #'
 #' @family on demands
 #'
-on_demand <- function(url,
-                      b,
-                      attempt = 15,
-                      pause_base = 10,
-                      pause_cap = 60,
-                      pause_min = 1,
+on_demand <- function(b,
                       path = NULL,
                       overwrite = FALSE,
                       aws = FALSE,
                       silence = FALSE)
 {
+  # Build URL
+  url <- sprintf("%s/Extractions/ExtractRaw", getOption("dss_url"))
+
   # Make the request
   token <- get("token",envir = cacheEnv)
   resp <- httr::POST(url,
-                     httr::add_headers(prefer = "respond-async,wait=10",
+                     httr::add_headers(prefer = "respond-async,wait=1",
                                        Authorization = token),
                      httr::content_type_json(),
                      body = b,
@@ -45,5 +43,24 @@ on_demand <- function(url,
   # Initial error check
   error_check(resp,"On-demand extraction failed")
   # Exponential Backoff with Jitter
-  ebwj(resp,attempt,pause_base,pause_cap,pause_min,path,overwrite,aws,silence)
+  ebwj(resp,path,overwrite,aws,silence)
+}
+
+#'
+retry_on_demand <- function(location,
+                            path = NULL,
+                            overwrite = FALSE,
+                            aws = FALSE,
+                            silence = FALSE)
+{
+  # validate args
+  if(is.null(location))
+    location <- get("location",envir = cacheEnv)
+
+  token <- get("token",envir = cacheEnv)
+  resp <- httr::GET(location,
+                    httr::add_headers(prefer = "respond-async,wait=1",
+                                      Authorization = token))
+  error_check(resp,"On-demand extraction failed")
+  ebwj(resp,path,overwrite,aws,silence)
 }

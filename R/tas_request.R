@@ -17,35 +17,42 @@
 #' @inheritParams on_demand
 #' @inherit on_demand return
 #'
+#' @examples
+#' \dontrun{
+#' iden <- identifier("IBM.N","AAPL.O")
+#' fid <- c("Trade - Price","Trade - Volume","Trade - Exchange Time")
+#' cond <- tas_condition("Range","2018-09-18","2018-09-19")
+#' a <- tas_request(iden,fid,cond)
+#' b <- read.csv(a)
+#' }
 #'
+#' @export
 tas_request <- function(identifier,
                         fields = c("Trade - Price",
                                    "Trade - Volume",
                                    "Trade - Exchange Time"),
                         condition,
-                        attempt = 15,
-                        pause_base = 10,
-                        pause_cap = 60,
-                        pause_min = 1,
                         path = NULL,
                         overwrite = FALSE,
                         aws = FALSE,
                         silence = FALSE) {
   # validate args
-  stopifnot(is.identifier(identifier))
+  if (!is.identifier(identifier))
+  {
+    if (is.character(identifier))
+    {
+      identifier<-identifier(identifier)
+    } else {
+      stop("Invalid Identifier", call. = FALSE)
+    }
+
+  }
   if (is.null(condition))
   {
     condition = tas_condition(range_type = "Delta",days_ago = 1)
   }
   stopifnot(inherits(condition,"tas_condition"))
   stopifnot(is.vector(fields,mode="character"))
-  stopifnot(is.numeric(attempt), length(attempt) == 1L)
-  stopifnot(is.numeric(pause_base), length(pause_base) == 1L)
-  stopifnot(is.numeric(pause_cap), length(pause_cap) == 1L)
-  stopifnot(is.numeric(pause_min), length(pause_min) == 1L)
-
-  # Build URL
-  url <- sprintf("%s/Extractions/ExtractRaw", getOption("dss_url"))
 
   # Build request body
   b <- list(
@@ -57,18 +64,56 @@ tas_request <- function(identifier,
     )
   )
   b <- jsonlite::toJSON(b,POSIXt = "ISO8601",auto_unbox = TRUE)
-  on_demand(url,
-            b,
-            attempt,
-            pause_base,
-            pause_cap,
-            pause_min,
+  on_demand(b,
             path,
             overwrite,
             aws,
             silence)
 }
 
+#' Time & Sales Condition
+#'
+#' Use this function to create condition for \code{\link{tas_request}}.
+#'
+#' @param range_type Report date range type. Possible values are "Range",
+#'   "Delta", "Relative".
+#' @param start_date,end_date The query start and end date for the "Range" type.
+#'   Tick History use ISO 8601 Date and time format.
+#'   The format is yyyy-mm-ddThh:mm:ss.sssZ
+#' @param days_ago The "Delta" type will retrieve all data within the number of
+#'   days of the extraction execution.
+#' @param r_start_days_ago,r_end_days_ago The days portion of the beginning and
+#'   the end of the "Relative" query time period. It is a positive integer, from
+#'   0 through 31, that represents a number of days preceding the data
+#'   extraction.
+#' @param r_start_time,r_end_time The time portion of the beginning and the end
+#'   of the relative query time period. It is a character string representing
+#'   hours, minutes, seconds, and (optionally) milliseconds, in the form:
+#'   \code{hh:mm:ss:mmm}
+#'   The range of values (including optional milliseconds) is 00:00:00.000
+#'   through 23:59:59.999
+#' @param timezone Specified a time zone for the request.
+#'   Accept a .NET time zone ID
+#' @param apply_corrections Apply corrections and cancellations to the result.
+#' @param display_source_ric Include Current RIC in results.
+#' @param extract_by Extract by "Entity" or "Ric".
+#' @param time_stamp_in Specify the data time stamp.
+#' @param sort_by Sort the data by Ric or by Timestamp
+#' @param range_mode Set to "Inclusive" to extract all relevant data between
+#'   start and end datetimes (recommended). Set to "Window" to limit extracted
+#'   data to a specific time window occurring daily between start and end
+#'   datetimes.
+#'
+#' @examples
+#' \dontrun{
+#' iden <- identifier("IBM.N","AAPL.O")
+#' fid <- c("Trade - Price","Trade - Volume","Trade - Exchange Time")
+#' cond <- tas_condition("Range","2018-09-18","2018-09-19")
+#' a <- tas_request(iden,fid,cond)
+#' b <- read.csv(a)
+#' }
+#'
+#' @export
 tas_condition <- function(range_type = c("Range",
                                          "Delta",
                                          "Relative"),
@@ -120,6 +165,9 @@ tas_condition <- function(range_type = c("Range",
   me
 }
 
+#' @rdname tas_request
+#'
+#' @export
 get_tas_fields <- function() {
   # Build URL
   url <- sprintf("%s/Extractions/GetValidExtractionFieldNames(ReportTemplateType=ThomsonReuters.Dss.Api.Extractions.ReportTemplates.ReportTemplateTypes'TickHistoryTimeAndSales')",

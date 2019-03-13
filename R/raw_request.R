@@ -1,27 +1,54 @@
+#' Raw On-Demand request
+#'
+#' \code{\link{tas_request}} send a single on-demand request with the specified
+#' instruments, fields, and condition.
+#'
+#' Time and sales is a display of market trading information, showing a view of
+#' every detail of a market's price movement.
+#'
+#' The function use Exponential Backoff with Jitter in order to find
+#' an acceptable polling rate. The approach is outlined in
+#' \url{https://aws.amazon.com/blogs/architecture/exponential-backoff-and-jitter}.
+#'
+#' @param identifier A list of instrument created from \code{\link{identifier}} function.
+#' @param fields A Time and Sales content fields.
+#'   Use \code{\link{get_tas_fields}} to request a list of all available Time and Sales fields.
+#' @param condition A Time and Sales condition created from \code{\link{tas_condition}} function.
+#' @inheritParams on_demand
+#' @inherit on_demand return
+#'
+#' @examples
+#' \dontrun{
+#' iden <- identifier("IBM.N","AAPL.O")
+#' fid <- c("Trade - Price","Trade - Volume","Trade - Exchange Time")
+#' cond <- tas_condition("Range","2018-09-18","2018-09-19")
+#' a <- tas_request(iden,fid,cond)
+#' b <- read.csv(a)
+#' }
+#'
+#' @export
 raw_request <- function(identifier,
                         condition,
-                        attempt = 15,
-                        pause_base = 10,
-                        pause_cap = 60,
-                        pause_min = 1,
                         path = NULL,
                         overwrite = FALSE,
                         aws = FALSE,
                         silence = FALSE) {
   # validate args
-  stopifnot(is.identifier(identifier))
+  if (!is.identifier(identifier))
+  {
+    if (is.character(identifier))
+    {
+      identifier<-identifier(identifier)
+    } else {
+      stop("Invalid Identifier", call. = FALSE)
+    }
+
+  }
   if (is.null(condition))
   {
     condition = raw_condition(range_type = "Delta",days_ago = 1)
   }
   stopifnot(inherits(condition,"raw_condition"))
-  stopifnot(is.numeric(attempt), length(attempt) == 1L)
-  stopifnot(is.numeric(pause_base), length(pause_base) == 1L)
-  stopifnot(is.numeric(pause_cap), length(pause_cap) == 1L)
-  stopifnot(is.numeric(pause_min), length(pause_min) == 1L)
-
-  # Build URL
-  url <- sprintf("%s/Extractions/ExtractRaw", getOption("dss_url"))
 
   # Build request body
   b <- list(
@@ -32,20 +59,11 @@ raw_request <- function(identifier,
     )
   )
   b <- jsonlite::toJSON(b,POSIXt = "ISO8601",auto_unbox = TRUE)
-
-  # Make the request
-  token <- get("token",envir = cacheEnv)
-  resp <- httr::POST(url,
-                     httr::add_headers(prefer = "respond-async,wait=10",
-                                       Authorization = token),
-                     httr::content_type_json(),
-                     body = b,
-                     encode = "raw")
-
-  # Initial error check
-  error_check(resp,"Raw extraction failed")
-  # Exponential Backoff with Jitter
-  ebwj(resp,attempt,pause_base,pause_cap,pause_min,path,overwrite,aws,silence)
+  on_demand(b,
+            path,
+            overwrite,
+            aws,
+            silence)
 }
 
 raw_condition <- function(range_type = c("Range",

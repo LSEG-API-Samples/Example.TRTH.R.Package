@@ -3,10 +3,7 @@
 #' Instruments may be currently active, or inactive 'historical only' instruments.
 #'
 #' @param chain_rics vector or list of Chain RICs to return constituents for.
-#' @param start_date_time The range's start date and time.
-#'   Tick History use ISO 8601 Date and time format.
-#'   The format is yyyy-mm-ddThh:mm:ss.sssZ
-#' @param end_date_time The range's end date and time.
+#' @param start_date_time,end_date_time The range's start and end datetimes.
 #'   Tick History use ISO 8601 Date and time format.
 #'   The format is yyyy-mm-ddThh:mm:ss.sssZ
 #'

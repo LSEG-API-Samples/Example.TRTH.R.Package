@@ -1,17 +1,23 @@
 #' Exponential Backoff with Jitter
 #'
 #' @inheritParams on_demand
-
+#'
 ebwj <- function(resp,
-                 attempt = 15,
-                 pause_base = 10,
-                 pause_cap = 60,
-                 pause_min = 1,
                  path = NULL,
                  overwrite = FALSE,
                  aws = FALSE,
                  silence = FALSE) {
   i = 0
+  attempt = getOption("dss_attempt")
+  pause_base = getOption("dss_pause_base")
+  pause_cap = getOption("dss_pause_cap")
+  pause_min = getOption("dss_pause_min")
+
+  stopifnot(is.numeric(attempt), length(attempt) == 1L)
+  stopifnot(is.numeric(pause_base), length(pause_base) == 1L)
+  stopifnot(is.numeric(pause_cap), length(pause_cap) == 1L)
+  stopifnot(is.numeric(pause_min), length(pause_min) == 1L)
+
   if(!silence) { pb <- txtProgressBar(max = attempt, width = attempt, char = ".",style = 2) }
   while(!async_check(resp,silence) && i < attempt)
   {
@@ -30,5 +36,6 @@ ebwj <- function(resp,
   } else if(!silence)
   {
     message("Attempt exceeded.")
+    return(resp$headers$location)
   }
 }
