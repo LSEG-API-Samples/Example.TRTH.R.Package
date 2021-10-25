@@ -53,7 +53,7 @@ raw_request <- function(identifier,
   # Build request body
   b <- list(
     ExtractionRequest = list(
-      "@odata.type" = "#ThomsonReuters.Dss.Api.Extractions.ExtractionRequests.TickHistoryRawExtractionRequest",
+      "@odata.type" = "#DataScope.Select.Api.Extractions.ExtractionRequests.TickHistoryRawExtractionRequest",
       IdentifierList = I(identifier),
       Condition = I(condition)
     )
