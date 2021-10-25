@@ -4,7 +4,7 @@ cacheEnv <- new.env(parent = emptyenv())
 .onLoad <- function(libname, pkgname) {
   op <- options()
   op.trth <- list(
-    dss_url = "https://hosted.datascopeapi.reuters.com/RestApi/v1",
+    dss_url = "https://selectapi.datascope.refinitiv.com/RestApi/v1",
     dss_attempt = 15,
     dss_pause_base = 10,
     dss_pause_cap = 60,
