@@ -103,7 +103,7 @@ intraday_condition <- function(range_type = c("Range",
 
 get_intraday_fields <- function() {
   # Build URL
-  url <- sprintf("%s/Extractions/GetValidExtractionFieldNames(ReportTemplateType=ThomsonReuters.Dss.Api.Extractions.ReportTemplates.ReportTemplateTypes'TickHistoryIntradaySummaries')",
+  url <- sprintf("%s/Extractions/GetValidExtractionFieldNames(ReportTemplateType=DataScope.Select.Api.Extractions.ReportTemplates.ReportTemplateTypes'TickHistoryIntradaySummaries')",
                  getOption("dss_url"))
 
   token <- get_token()
