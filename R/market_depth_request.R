@@ -29,7 +29,7 @@ market_depth_request <- function(identifier,
   # Build request body
   b <- list(
     ExtractionRequest = list(
-      "@odata.type" = "#ThomsonReuters.Dss.Api.Extractions.ExtractionRequests.TickHistoryMarketDepthExtractionRequest",
+      "@odata.type" = "#DataScope.Select.Api.Extractions.ExtractionRequests.TickHistoryMarketDepthExtractionRequest",
       IdentifierList = I(identifier),
       ContentFieldNames = I(fields),
       Condition = I(condition)
@@ -104,7 +104,7 @@ market_depth_condition <- function(view = c("NormalizedLL2",
 
 get_market_depth_fields <- function() {
   # Build URL
-  url <- sprintf("%s/Extractions/GetValidExtractionFieldNames(ReportTemplateType=ThomsonReuters.Dss.Api.Extractions.ReportTemplates.ReportTemplateTypes'TickHistoryMarketDepth')",
+  url <- sprintf("%s/Extractions/GetValidExtractionFieldNames(ReportTemplateType=DataScope.Select.Api.Extractions.ReportTemplates.ReportTemplateTypes'TickHistoryMarketDepth')",
                  getOption("dss_url"))
 
   token <- get_token()
