@@ -57,7 +57,7 @@ tas_request <- function(identifier,
   # Build request body
   b <- list(
     ExtractionRequest = list(
-      "@odata.type" = "#ThomsonReuters.Dss.Api.Extractions.ExtractionRequests.TickHistoryTimeAndSalesExtractionRequest",
+      "@odata.type" = "#DataScope.Select.Api.Extractions.ExtractionRequests.TickHistoryTimeAndSalesExtractionRequest",
       IdentifierList = I(identifier),
       ContentFieldNames = I(fields),
       Condition = I(condition)
@@ -170,7 +170,7 @@ tas_condition <- function(range_type = c("Range",
 #' @export
 get_tas_fields <- function() {
   # Build URL
-  url <- sprintf("%s/Extractions/GetValidExtractionFieldNames(ReportTemplateType=ThomsonReuters.Dss.Api.Extractions.ReportTemplates.ReportTemplateTypes'TickHistoryTimeAndSales')",
+  url <- sprintf("%s/Extractions/GetValidExtractionFieldNames(ReportTemplateType=DataScope.Select.Api.Extractions.ReportTemplates.ReportTemplateTypes'TickHistoryTimeAndSales')",
                  getOption("dss_url"))
 
   token <- get_token()
