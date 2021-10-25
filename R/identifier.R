@@ -19,7 +19,7 @@ identifier <- function( ... , identifier_type = c("Ric","Isin","Cusip","Sedol"))
 
   me <- structure(
     list(
-      "@odata.type" = "#ThomsonReuters.Dss.Api.Extractions.ExtractionRequests.InstrumentIdentifierList",
+      "@odata.type" = "#DataScope.Select.Api.Extractions.ExtractionRequests.InstrumentIdentifierList",
       InstrumentIdentifiers = I(identifier_list)
     ),
     class = c("identifier","list")
