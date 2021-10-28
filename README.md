@@ -1,5 +1,5 @@
-# Example-TRTH-R-Package
-This example package bundles together code from [Tick History in R language](https://developers.thomsonreuters.com/article/using-tick-history-rest-api-r-language-part-1) with several improvements.
+# Example-RTH-R-Package
+This example package bundles together code from [Tick History in R language](https://developers.refinitiv.com/en/article-catalog/article/tick-history-in-r-language-part-1) with several improvements.
 
 ## Store session token
 The user simply call the `login` once and the package will store the session token for all other request.
@@ -15,7 +15,7 @@ historical_chain("0#.DJI","1996-01-01","2018-01-01")
 ```
 
 ## Standard Extraction
-As described in the [article part 2](https://developers.thomsonreuters.com/article/tick-history-r-language-part-2)
+As described in the [article part 2](https://developers.refinitiv.com/en/article-catalog/article/tick-history-in-r-language-part-2)
 But unlike the article, the user can specify how many pages they wish to request.
 ```r
 user_packages() #One page
