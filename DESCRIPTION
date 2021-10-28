@@ -5,7 +5,7 @@ Version: 0.2.0
 Author: Warat Boonyanit
 Maintainer: Warat Boonyanit <Warat.boonyanit@refinitiv.com>
 Description: This R package use the httr to retrieve data from Refinitiv Tick History REST APIs.
-    It is part of an educational articles TRTH in R (https://developers.refinitiv.com/articles-samples)
+    It is part of an educational articles RTH in R (https://developers.refinitiv.com/en/article-catalog)
 License: TODO
 Encoding: UTF-8
 LazyData: true
